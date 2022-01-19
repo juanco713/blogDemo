@@ -1,11 +1,17 @@
 const express = require('express');
 const app = express();
 require('dotenv').config();
-const sequelize = require('./src/database/index.js')
+const sequelize = require('./src/database/index.js');
+const Post = require('./src/database/models/postModel');
+const Category = require('./src/database/models/categoryModel');
+
 
 
 async function serverConnection() {
     try {
+        Category.hasMany(Post);
+
+
         await sequelize.authenticate();
         await sequelize.sync();
         console.log('Connection has been established');
