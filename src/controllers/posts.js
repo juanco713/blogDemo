@@ -37,7 +37,54 @@ async function createPost(req, res) {
 };
 
 
+async function getOnePost(req,res) {
+    try {
+        const idPost = req.params.id;
+        const postFound = await Post.findByPk(idPost);
+        if(postFound) {
+            res.json(postFound).status(200);
+        } else {
+            res.json({message: "Post not found!"}).status(404);
+        }
+    } catch (error) {
+        console.error(error).status(500);
+    }
+};
+
+async function deleteOnePost(req,res) {
+    try {
+        const idPost = req.params.id;
+        const postFound = await Post.findByPk(idPost);
+        if(postFound) {
+            await postFound.destroy();
+            res.json({message: `Post called ${postFound.titulo} was deleted!`}).status(200);
+        } else {
+            res.json({message: "Cant delete the post"}).status(404);
+        }
+    } catch (error) {
+        console.error(error)
+    }
+};
+
+async function updatePost(req,res) {
+    try {
+        const idPost = req.params.id;
+        const postFound = await User.findByPk(idPost);
+        if(titulo || contenido || imagen) {
+            const updatedPost = await postFound.update({
+                titulo: req.body.titulo,
+                contenido: req.body.contenido,
+                imagen: req.body.imagen
+            });
+            await updatedPost.save();
+            res.json({message:'The post has been updated'}).status(200)
+        } else {
+            res.json('You have to complete at least one field').status(401)
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
 
 
-
-module.exports = { createPost, getAllPosts };
+module.exports = { createPost, getAllPosts, getOnePost, deleteOnePost, updatePost };
